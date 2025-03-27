@@ -1,0 +1,86 @@
+Vagrant.configure("2") do |config|
+  
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+    vb.cpus = 1
+    vb.customize ["setproperty", "machinefolder", "S:\\VMs"]
+  end
+
+  # Загальні налаштування для всіх VM
+  config.vm.provision "shell", inline: <<-SHELL
+    # Створення користувача xxx з root правами
+    useradd -m -s /bin/bash xxx
+    echo "xxx:xxx" | chpasswd
+    usermod -aG sudo xxx
+    # Дозвіл sudo без паролю для зручності
+    echo "xxx ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+ 	apt update
+    apt upgrade -y
+    apt install -y openssh-server mc cifs-utils traceroute pv
+  SHELL
+
+  # VM1 - Загальнодоступний вебсервер
+  config.vm.define "web" do |web|
+    web.vm.box = "ubuntu/jammy64"
+    web.vm.hostname = "webserver-public"
+    web.vm.network "public_network", bridge: "Intel(R) Ethernet Controller I226-V #7"
+    web.vm.synced_folder "S:\\VMs\\web_shared", "/vagrant_data"
+    web.vm.provision "shell", inline: <<-SHELL
+      sudo apt update
+      sudo apt upgrade -y
+      sudo apt install -y nginx
+	  echo "Вимикаємо машину..."
+      sudo shutdown -h now
+    SHELL
+  end
+
+  # VM2 - Приватний сервер
+  config.vm.define "private" do |private|
+    private.vm.box = "ubuntu/jammy64"
+    private.vm.hostname = "private-server"
+    private.vm.network "private_network", ip: "192.168.10.10"
+    private.vm.synced_folder "S:\\VMs\\private_shared", "/vagrant_data"
+	private.vm.provision "shell", path: "provision_private.sh"
+  end
+
+  # VM3 - Загальнодоступний сервер зі статичним IP
+  config.vm.define "public_static" do |public_static|
+    public_static.vm.box = "ubuntu/jammy64"
+    public_static.vm.hostname = "public-static-server"
+    public_static.vm.network "public_network", 
+      bridge: "Intel(R) Ethernet Controller I226-V #7",
+      ip: "192.168.1.200",
+      netmask: "255.255.255.0"
+    public_static.vm.synced_folder "S:\\VMs\\public_static_shared", "/vagrant_data"
+    public_static.vm.provision "shell", inline: <<-SHELL
+      sudo apt update
+      sudo apt install -y nginx
+	  echo "Вимикаємо машину..."
+      sudo shutdown -h now
+    SHELL
+  end
+  
+  # Додаткове завдання: Створити три віртуальні машини з тією ж самою конфігурацією
+  web_servers = ["web1", "web2", "web3"]
+
+  web_servers.each do |server_name|
+    shared_folder = "S:\\VMs\\#{server_name}_shared"
+
+    # Перевіряємо, чи існує папка, і створюємо її, якщо немає
+    Dir.mkdir(shared_folder) unless Dir.exist?(shared_folder)
+
+    config.vm.define server_name do |web|
+      web.vm.box = "ubuntu/jammy64"
+      web.vm.hostname = server_name
+      web.vm.network "public_network", bridge: "Intel(R) Ethernet Controller I226-V #7"
+      web.vm.synced_folder shared_folder, "/vagrant_data"
+      web.vm.provision "shell", inline: <<-SHELL
+        sudo apt update
+        sudo apt upgrade -y
+        sudo apt install -y nginx
+        echo "Вимикаємо машину..."
+        sudo shutdown -h now
+      SHELL
+    end
+  end
+end
