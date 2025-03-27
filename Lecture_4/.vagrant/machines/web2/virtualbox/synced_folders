@@ -1,0 +1,1 @@
+{"virtualbox":{"/vagrant_data":{"guestpath":"/vagrant_data","hostpath":"S:/VMs/web2_shared","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"D:/Data/Git/spring-petclinic/Lecture_4","disabled":false,"__vagrantfile":true}}}
