@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-app
+  namespace: dev
+  labels:
+    app: busybox-app
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: busybox-app
+  template:
+    metadata:
+      labels:
+        app: busybox-app
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["sleep", "3600"]
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
