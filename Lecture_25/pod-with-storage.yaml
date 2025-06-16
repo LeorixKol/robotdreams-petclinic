@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-with-storage
+  namespace: default
+  labels:
+    app: nginx-storage
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: storage-volume
+      mountPath: /usr/share/nginx/html/data
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    # Додамо команду для створення індексної сторінки
+    lifecycle:
+      postStart:
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - |
+              mkdir -p /usr/share/nginx/html/data
+              echo "<h1>EBS Volume Test</h1><p>Data stored on EBS GP2 volume</p>" > /usr/share/nginx/html/index.html
+  volumes:
+  - name: storage-volume
+    persistentVolumeClaim:
+      claimName: ebs-pvc

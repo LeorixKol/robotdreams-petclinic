@@ -1,0 +1,33 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-lab-cluster
+  region: eu-north-1
+  version: "1.31"
+  tags:
+    environment: dev
+    project: eks-lab
+
+iam:
+  withOIDC: true
+
+managedNodeGroups:
+  - name: lab-workers
+    instanceType: t3.medium
+    minSize: 2
+    maxSize: 4
+    desiredCapacity: 2
+    amiFamily: AmazonLinux2023
+    ssh:
+      enableSsm: true
+    volumeSize: 20
+    volumeType: gp3
+
+addons:
+  - name: vpc-cni
+  - name: coredns  
+  - name: kube-proxy
+  - name: aws-ebs-csi-driver
+    wellKnownPolicies:
+      ebsCSIController: true

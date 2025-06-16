@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: website-content
+  namespace: default
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="uk">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>EKS Lab - Static Website</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                margin: 0;
+                padding: 20px;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .container {
+                background: white;
+                border-radius: 15px;
+                padding: 40px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                text-align: center;
+                max-width: 600px;
+            }
+            h1 { color: #333; margin-bottom: 20px; }
+            .info { 
+                background: #f8f9fa; 
+                padding: 20px; 
+                border-radius: 10px; 
+                margin: 20px 0; 
+                text-align: left;
+            }
+            .badge { 
+                background: #28a745; 
+                color: white; 
+                padding: 5px 10px; 
+                border-radius: 15px; 
+                margin: 5px; 
+                display: inline-block; 
+            }
+            .status { color: #28a745; font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🚀 EKS Lab Website</h1>
+            <p>Статичний вебсайт розгорнутий в Amazon EKS</p>
+            
+            <div class="info">
+                <h3>📋 Деталі розгортання:</h3>
+                <p><strong>Платформа:</strong> Amazon EKS (Kubernetes 1.31)</p>
+                <p><strong>Регіон:</strong> eu-north-1 (Stockholm)</p>
+                <p><strong>Веб-сервер:</strong> Nginx</p>
+                <p><strong>AMI:</strong> AmazonLinux2023</p>
+            </div>
+            
+            <div class="info">
+                <h3>🛠️ Технології:</h3>
+                <span class="badge">Kubernetes</span>
+                <span class="badge">Amazon EKS</span>
+                <span class="badge">Nginx</span>
+                <span class="badge">ConfigMap</span>
+                <span class="badge">LoadBalancer</span>
+            </div>
+            
+            <div class="info">
+                <h3>📊 Статус:</h3>
+                <p class="status">✅ Успішно розгорнуто</p>
+                <p><strong>Час розгортання:</strong> <span id="time"></span></p>
+            </div>
+        </div>
+        
+        <script>
+            document.getElementById('time').textContent = new Date().toLocaleString('uk-UA');
+        </script>
+    </body>
+    </html>
