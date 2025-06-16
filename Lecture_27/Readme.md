@@ -18,8 +18,6 @@
 
 ## 3. Створення бази даних та таблиць
 
-- Створюємо ConfigMap з HTML контентом: [configmap.yaml](configmap.yaml)
-
 ```SQL
 -- Створення бази даних
 CREATE DATABASE library;
@@ -93,8 +91,6 @@ INSERT INTO reading_status (book_id, status, progress_percentage, notes) VALUES
 
 ## 5. Виконання запитів
 
-- Створюємо простий Job [simple-job.yaml](simple-job.yaml), застосовуємо і робимо моніторинг виконання Job:
-
 ```SQL
 -- Знайдіть всі книги, які ще не прочитані:
 SELECT books.title, authors.name 
@@ -108,7 +104,6 @@ WHERE reading_status.status IS NULL OR reading_status.status != 'completed';
 
 ```SQL
 -- Визначте кількість книг, які в процесі читання:
-
 SELECT COUNT(*) AS reading_books
 FROM reading_status
 WHERE status = 'reading';
