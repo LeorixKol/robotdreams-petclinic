@@ -1,0 +1,6 @@
+# inventories/hosts
+[servers]
+test-pet ansible_host=192.168.1.49 ansible_user=xxx
+
+[servers:vars]
+ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,35 @@
+# roles/firewall/tasks/main.yml
+---
+- name: Install and configure UFW
+  apt:
+    name: ufw
+    state: present
+
+- name: Deny incoming by default
+  ufw:
+    direction: incoming
+    policy: deny
+
+- name: Allow outgoing by default  
+  ufw:
+    direction: outgoing
+    policy: allow
+
+- name: Allow SSH
+  ufw:
+    rule: allow
+    port: "22"
+
+- name: Allow HTTP
+  ufw:
+    rule: allow
+    port: "80"
+
+- name: Allow HTTPS
+  ufw:
+    rule: allow
+    port: "443"
+
+- name: Enable UFW
+  ufw:
+    state: enabled

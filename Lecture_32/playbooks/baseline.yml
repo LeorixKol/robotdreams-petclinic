@@ -1,0 +1,22 @@
+# playbooks/baseline.yml
+---
+- name: Apply baseline configuration to servers
+  hosts: servers
+  become: yes
+  gather_facts: yes
+  
+  tasks:
+    - name: Include baseline role
+      include_role:
+        name: baseline
+      tags: baseline
+
+  post_tasks:
+    - name: Display server information
+      debug:
+        msg:
+          - "Server: {{ inventory_hostname }}"
+          - "IP: {{ ansible_default_ipv4.address | default('N/A') }}"
+          - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Kernel: {{ ansible_kernel }}"
+      tags: info
