@@ -1,0 +1,39 @@
+# roles/mysql/tasks/main.yml
+---
+- name: Install MySQL packages
+  apt:
+    name: ['mysql-server', 'python3-pymysql']
+    state: present
+    update_cache: yes
+
+- name: Start MySQL service
+  systemd:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Set MySQL root password
+  mysql_user:
+    name: root
+    password: "{{ vault_mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Create application database
+  mysql_db:
+    name: "{{ vault_mysql_db_name }}"
+    state: present
+    login_user: root
+    login_password: "{{ vault_mysql_root_password }}"
+
+- name: Create application user
+  mysql_user:
+    name: "{{ vault_mysql_user }}"
+    password: "{{ vault_mysql_password }}"
+    priv: "{{ vault_mysql_db_name }}.*:ALL"
+    host: localhost
+    login_user: root
+    login_password: "{{ vault_mysql_root_password }}"
+
+- name: Display success
+  debug:
+    msg: "MySQL встановлено! БД: {{ vault_mysql_db_name }}, User: {{ vault_mysql_user }}"

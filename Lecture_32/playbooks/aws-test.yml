@@ -1,0 +1,13 @@
+# playbooks/aws-test.yml
+---
+- name: Test AWS dynamic inventory
+  hosts: all
+  become: yes
+  gather_facts: yes
+  
+  tasks:
+    - name: Show AWS instance info
+      debug:
+        msg:
+          - "Instance: {{ inventory_hostname }}"
+          - "Public IP: {{ ansible_host }}"

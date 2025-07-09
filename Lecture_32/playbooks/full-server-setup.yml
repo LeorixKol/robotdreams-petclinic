@@ -1,0 +1,13 @@
+# playbooks/full-server-setup.yml
+---
+- name: Full Server Setup
+  hosts: servers
+  become: yes
+  vars_files:
+    - ../vault/mysql-secrets.yml
+    
+  roles:
+    - baseline
+    - firewall
+    - mysql
+    - nginx

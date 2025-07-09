@@ -1,0 +1,4 @@
+# roles/nginx/defaults/main.yml
+---
+page_title: "Welcome to Nginx"
+welcome_message: "Nginx successfully configured!"

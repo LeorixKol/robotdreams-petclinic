@@ -1,0 +1,21 @@
+# roles/baseline/tasks/main.yml
+---
+- name: Update apt and install packages
+  apt:
+    name: 
+      - vim
+      - git
+      - mc
+      - ufw
+      - curl
+      - wget
+      - unzip
+      - traceroute
+      - cifs-utils
+      - pv
+    state: present
+    update_cache: yes
+
+- name: Set timezone to Kyiv
+  timezone:
+    name: Europe/Kyiv

@@ -1,0 +1,22 @@
+# playbooks/firewall.yml
+---
+- name: Configure firewall on servers
+  hosts: servers
+  become: yes
+  gather_facts: yes
+  
+  tasks:
+    - name: Include firewall role
+      include_role:
+        name: firewall
+      tags: firewall
+
+  post_tasks:
+    - name: Display firewall configuration summary
+      debug:
+        msg:
+          - "Firewall configured on: {{ inventory_hostname }}"
+          - "Default incoming policy: deny"
+          - "Default outgoing policy: allow"
+          - "SSH (22), HTTP (80), HTTPS (443) ports allowed"
+      tags: info

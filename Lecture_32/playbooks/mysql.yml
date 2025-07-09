@@ -1,0 +1,10 @@
+# playbooks/mysql-install.yml
+---
+- name: Install MySQL with Vault
+  hosts: servers
+  become: yes
+  vars_files:
+    - ../vault/mysql-secrets.yml
+  
+  roles:
+    - mysql
