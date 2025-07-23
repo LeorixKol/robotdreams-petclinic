@@ -2,7 +2,7 @@
 
 ## Налаштування моніторинг-серверу
 
-### Cтворення конфігураційних фай1лів на моніторинг-сервері
+### Cтворення конфігураційних файлів на моніторинг-сервері
 
 - [prometheus.yml](Metrics/prometheus/config/prometheus.yml)
 - [loki-config.yml](Metrics/loki/config/loki-config.yml)
@@ -37,13 +37,19 @@ EXIT;
 ### Після запуску контейнерів в веб-інтерфейсі Grafana додаємо джерела даних
 
 - Prometheus:
+
 Name: Prometheus
+
 Type: Prometheus
+
 URL: http://prometheus:9090
 
 - Loki:
+
 Name: Loki
+
 Type: Loki
+
 URL: http://loki:3100
 
 ### Для перевірки чи все зрослося
