@@ -1,0 +1,52 @@
+services:
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+
+  mysqld-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysqld-exporter
+    # environment:
+    #  - DATA_SOURCE_NAME=exporter:your_exporter_password@tcp(localhost:3306)/
+    volumes:
+      - /opt/Docker/Monitoring/mysqld-exporter/.my.cnf:/home/exporter/.my.cnf:ro
+    ports:
+      - "9104:9104"
+    command:
+      - --config.my-cnf=/home/exporter/.my.cnf
+      - --web.listen-address=0.0.0.0:9104
+      - --collect.info_schema.processlist
+      - --collect.info_schema.innodb_metrics
+      - --collect.info_schema.tablestats
+      - --collect.info_schema.tables
+      - --collect.info_schema.userstats
+    restart: unless-stopped
+    network_mode: host
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/lib/mysql:/var/lib/mysql:ro
+      - /opt/Docker/Monitoring/promtail/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    restart: unless-stopped
+    network_mode: host
+
+networks:
+  monitoring:
+    driver: bridge
