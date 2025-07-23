@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['loki:3100']
+    scrape_interval: 15s
+
+  - job_name: 'mysql-exporter'
+    static_configs:
+      - targets: ['172.31.47.96:9104']  # Віддалений MySQL сервер
+    scrape_interval: 30s
+
+  - job_name: 'mysql-node'
+    static_configs:
+      - targets: ['172.31.47.96:9100']  # Node exporter на MySQL сервері
+    scrape_interval: 15s
